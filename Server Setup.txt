@@ -1,0 +1,9 @@
+#1. Install an ubuntu sever OS on your local system using VirtualBox and do the initial setup to bring it up.
+  * To access the VM OS using putty or mobaXterm do the below settings :-
+      - Go to Virtual Machine -> Settings of the OS -> Network -> Adapter 1 
+      - Set attached to as 'bridged Adapter'
+      - Go to Advanced and set the Promiscuous Mode to 'Allow All'
+      - Start the OS and head over to the Terminal.
+      - use 'sudo apt-get install ssh' to install ssh client on the server.
+      - Restart/Reboot the server once ssh is installed.
+      - Use 'hostname -I' to get the ip address of the server then setup a session in putty using the ip address and the port (22) and access it seamlessly using putty.   
