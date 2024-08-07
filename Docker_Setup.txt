@@ -1,4 +1,5 @@
 #1. Install Docker on the Server-
+  - Use 'sudo apt-get upgrade' to update/upgrade the system.
   - Use 'sudo apt install docker.io' to install docker.
   - Use 'sudo cat /etc/group' to check group list with all the users permitted
   - Use 'sudo usermod -aG docker ubuntu' to add the user 'ubuntu' to the group 'docker' in order to run the docker commands without sudo privilleges.
