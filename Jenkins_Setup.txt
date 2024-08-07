@@ -1,0 +1,16 @@
+#1. Install and Setup jenkins on ubuntu Server-
+  - Use 'sudo apt-get upgrade' to update/upgrade the system.
+  - Use 'sudo apt install fontconfig openjdk-17-jre' to install java (which is a prerquisite) on the server.
+  - Use the below command to install jenkins for LTS release - 
+      curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
+      /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+      echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+      https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+      /etc/apt/sources.list.d/jenkins.list > /dev/null
+      sudo apt-get update -y 
+      sudo apt-get install jenkins -y
+  - Use 'sudo systemctl enable jenkins' to enable Jenkins service.
+  - Use 'sudo systemctl start jenkins' to start Jenkins service.
+  - Use 'sudo systemctl status jenkins' to check the Jenkins service status. Once the status shows 'active (running)' in green , proceed for further.
+
+  - In case of EC2 instance - Go to the instance -> Security groups -> Inbound rules -> Edit inbound rules -> Add rule -> Type 'Custom TCP', Port range '8080', Source 'My IP/0.0.0.0' -> Save. Now the jenkins GUI will be accessible using 'instance_ip:8080'.
