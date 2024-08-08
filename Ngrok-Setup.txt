@@ -1,0 +1,15 @@
+#1. Setup local VM for incoming reqquests (eg: webhooks)
+  - Setup ngrok to obtain a pulic url using below commands -
+    curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
+        | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \
+        && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" \
+        | sudo tee /etc/apt/sources.list.d/ngrok.list \
+        && sudo apt update \
+        && sudo apt install ngrok
+  - Setup/Configure ngrok aut token using 'ngrok config add-authtoken <authtoken>'. Where the auth token can be obtained from the ngrok website.
+  - Use 'ngrok http http://localhost:8080' to obtain a public url for a service running locally at port 8080.
+  - Obtain the public url (<ngrok_public_url>) for further use.
+
+#2. Setup webhook to receive webhook data locally
+  - Go to Jenkins -> User (Right top) -> Configure -> API Tokens -> Add new Token -> Generate -> Copy this token for further use.
+  - Got to your github account -> Select a repository for which webhook creation is required -> Repository Settings -> Webhooks -> Add Webhook -> Set peyload url as '<ngrok_public_url>/github-webhook/' -> Choose Content type -> Feed the Jenkins token in the secret section -> select the type of event -> Add webhook.
