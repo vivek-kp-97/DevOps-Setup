@@ -1,4 +1,5 @@
 #1. Setup local VM for incoming reqquests (eg: webhooks)
+  - Use 'sudo apt-get upgrade' to update/upgrade the system.
   - Setup ngrok to obtain a pulic url using below commands -
     curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc \
         | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null \

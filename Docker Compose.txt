@@ -1,4 +1,5 @@
 #1. Install docker compose.
+  - Use 'sudo apt-get upgrade' to update/upgrade the system.
   - Use 'sudo apt-get install docker-compose-v2' to install docker compose v2.
   - Use 'docker compose version' to check the version of the docker compose installed.
   - Use 'docker compose up -d'/'docker compose up -d --build' to build and run a docker image.
