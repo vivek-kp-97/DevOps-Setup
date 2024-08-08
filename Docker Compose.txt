@@ -1,0 +1,7 @@
+#1. Install docker compose.
+  - Use 'sudo apt-get install docker-compose-v2' to install docker compose v2.
+  - Use 'docker compose version' to check the version of the docker compose installed.
+  - Use 'docker compose up -d'/'docker compose up -d --build' to build and run a docker image.
+  - Use 'docker compose down' to scale down all the running docker images.
+
+Note : From July 2023 Compose V1 stopped receiving updates. It's also no longer available in new releases of Docker Desktop. Compose V2, which was first released in 2020, is included with all currently supported versions of Docker Desktop. Every docker-compose command now has a structure of 'docker compose up -d' instead of docker-compose up -d.
