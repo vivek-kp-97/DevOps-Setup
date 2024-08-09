@@ -1,0 +1,29 @@
+#1. End to End set up jenkins agent on EC2-
+  - Create two instances with key-pair, one for master and another for Agent/Slave.
+  - Log in to the Master instance and follow any one of the below steps to generate private key and public key.
+    * 1st Way
+      - Use 'cd .ssh/' 
+      - Use 'ssh-keygen' and enter thrice to generate the private and public keys with default names, where <name>.pub will be the public key and <name> will be the private key.
+    * 2nd Way
+      - Use 'cd .ssh/'
+      - Use 'ssh-keygen -t ed25519' and enter thrice to generate the private and public keys with default names, where <name>.pub will be the public key and <name> will be the private key.
+  - Keep the contents of the <name>.pub and <name> handy.
+  - Go to the Agent/Slave instance -> Do 'cd .ssh/' -> Use 'sudo vi authorized_key" to edit the authorized keys, move all the way to the end, enter insert mode, make a new line and paste the <name>.pub contents (wihtout any blank line) -> save and exit the file using '[Esc]:wq!'
+  - Now go to the Master instance and check the connection from master instance to Agent/Slave instance using 'ssh ubuntu@<ip_addr_of_Agent_instance>'. If it connect, then move ahead otherwise debug for any issues.
+  - Go to the master instance -> Install updates using 'sudo apt-get update' -> Install java/jre using 'do apt install fontconfig openjdk-17-jre' -> Install Jenkins using below script - 
+      curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
+      /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+      echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+      https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+      /etc/apt/sources.list.d/jenkins.list > /dev/null
+      sudo apt-get update -y 
+      sudo apt-get install jenkins -y
+  - On the master instance go to security groups -> Edit inbound rules -> Add rule -> Type 'Custom TCP', Port range '8080', Source 'My IP/0.0.0.0' or port can also be set to MyIP.
+  - Go to the Agent instance -> Install updates using 'sudo apt-get update' -> Install Dcker using 'sudo apt-get install docker.io' -> Add ubuntu user to docker group using 'sudo usermod -aG docker ubuntu' -> Install docker compose using 'sudo apt-get install docker-compose-v2' -> Install java/jre using 'do apt install fontconfig openjdk-17-jre' -> Verify installation of all of these.
+  - Access the jenkins installed on the Master instance using '<ipaddr_master_instance>:8080' -> Do initial setup of jenkins -> Login -> Manage Jenkins -> Nodes -> New Node -> Provide node name 'dev-server' -> Check permanent agent.
+  - On the new form, Provide basic description -> Number of Executors (1CPU = 1 Executor) -> Set remote root directory (Go to agent instance -> mkdir jenkins_jobs -> pwd -> copy the path and feed it to the remote root directory) -> 
+    -> Set label as 'dev-server' (this needs to be remebered for further use in the jenkinsfile) -> Usage Select as required -> Sel launch method to 'launch agent via SSH' -> Host will be the public ip address of the Agent instance ->
+    -> Credentials -> Add -> Type will be 'SSH username with private key' -> id 'dev-server' -> username 'ubuntu' -> private key -> Enter directly -> Add -> Enter the contents of the <name> private key generated on Master instance -> 
+    -> Add -> Select 'dev-server' in the dropdown -> Host Key Verification 'Non verifying veirifcation strategy ' -> Save -> Click on new agent -> Launch agent. If this doesn't work then debug.
+  - Make changes in the jenkins file by replacing 'agent any' to agent {label "dev-server"}
+  - Now run a pipeline job to confirm the agent creation.
