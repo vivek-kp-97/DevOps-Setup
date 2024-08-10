@@ -1,0 +1,51 @@
+1. Log in to 'gitlab.com' (using google account) for personal use.
+2. In gitlab, 'group' represents equivalence to the username from 'github' and 'project' represents equivalence to the username from 'repository' from github.
+  In github url - <base_url>/username/repo
+  In gitlab url - <base_url>/groupname/project
+3. All the action such as push, pull, clone, commit etc. are the same as 'github' as gitlab also follows git as it's base SCM tool. The only change is 'Pull request' from github is termed as 'Merge request' in gitla.'
+4. In gitlab, there is a build in CI/CD tool integrated. So external usage of jenkins is not needed until required.
+5. A '.gitlab-ci.yml' file present inside a project holds the configuration for the gitlab CI to setup a a CI/CD pipeline, just like the Jenkinsfile. But in gitlab the pipeline need not be set explicitly, but just mere presence of the '.gitlab-ci.yml' file handles the creation of the pipeline for the related project.
+6. The '.gitlab-ci.yml' file follows construct similar to the 'docker-compose.yml' file which is in 'key : value' pair, which means indentation is done with tab spaces unline curly braces in Jenkins.
+7. Unlike jenkins ( pipeline { stages { stage { steps { }}}} ), the construct hierarchy which gitlab follows in it's pipeline configuration file ('.gitlab-ci.yml') is pipeline -> stages -> jobs .
+8. Multiple jobs can be setup for one stage, this can be termed as parallel jobs. Eg:- for stage : test, multiple jobs : unit testing, integration testing etc. can be setup.
+9. Variables can be used in the '.giltab-ci.yml'. All the variables start with a dollar sign ($). There are two kinds of variables allowed in gitlab-
+  - Predefined : There are a set of predefined CI/CD variables present for direct use in the '.gitlab-ci.yml' file. Eg:- $CI_PROJECT_NAME, $CI_COMMIT_AUTHOR etc. list of which can be found easily on the internet.
+  - User defined: User is also allowed to define variables as per requirement. or that, user needs to set it first and later use it with a dollar sign ($). While setting the variables, the variables are object of 'variables' type and not list of variables, So each variable will be in a new line without use of a hyphen (-) before the variable name.
+    Eg:
+    stages:
+      - build
+    variables:
+      BUILD_ENV: "Production"
+    build_job:
+      stage: build
+      script:
+        - echo "The build job is starting in $BUILD_ENV environment"
+10. The variable setup and usage is very similar to the environment variable setup and usage in the docker compose.
+11. To avoid exposing critical credentials such as docker credentials in the comfiguration as well as in the pipeline logs, gitlab offers variable setup for every project which helps in masking the credentials at the same time making necessary usage possible.
+12. To setup the variable for a project, got to settings -> CI/CD -> variables -> Expand -> Add variable -> Select type -> Select environment -> select visibility as 'masked' for confidential creds like password -> Provide description (Optional) -> Provide key (Uppercase) eg: DOCKER_USERNAME -> Provide value (the dockerhub username) -> Add variable.
+13. Later this variable can be used in the '.gitlab-ci.yml' file with a dollar sign ($DOCKER_USERNAME) whenever the docker hub username will be required.
+14. Gitlab artifacts helps parse pipeline logs in a file. these artifacts can be downloaded later for logs record keeping and debugging.
+    Eg:
+      stages:
+        - build"
+      build_job:
+        stage: build
+        script:
+          - mkdir -p logs
+          - echo "The build job is starting in $BUILD_ENV environment" > /logs/app.log
+15. There is a concept of runners in gitlab CI which is similar to the Agent from Jenkins. There are two types of runners:-
+  - Instance runners - Each CI/CD runs on a separate , isolated virtual machine provided by gitlab. These runners are available to all groups and projects.
+  - Project runners (self hosted runners) - These runners are the ones we can host on any of our machines generally assigned to a project.
+16. To add a project runner, go to settings -> CI/CD -> Click on 'Expand' in front of 'Runners' -> new project runner -> Provide a tag (just like label from Jenkins, to be used later in configuration) -> Check/Uncheck 'Run untagged jobs' as per requirement -> Fill all below details (Optional) -> Slect Platform -> To install gitlab-runner on your selected platform click on 'How do i install Gitlab Runner?' n this page above step 1 -> Follow till step 3 -> Click on View runner to view the runner just registered.
+17. For this runner to be in action the tag needs to be supplied in the 'gitlab-ci.yml' file. Eg: below
+    stages:
+      - build
+    build_job:
+      stage: build
+      script:
+        - echo "The build job is starting in $BUILD_ENV env"
+      tags:
+        - <runner_tag>
+18. Post feeding tag to the 'gitlab-ci.yml' (or making any ther changes in the code) the pipeline will automatically start the run as configured in the configuration file. To avoid automatic pipeline run, must include [ci skip] or [skip ci] in the commit message.
+19. If after feeding the tag pipeline runs and an error throws with messages "Prepare Environment...." then go to the platform where the gitlab-runner is running -> cd /home/gitlab-runner/ -> vi .bash_logout -> comment the contents of this file using '#' -> save and exit using '[Esc]:wq!' -> Re-deploy the pipeline.
+20. The way jenkins stores the contents of the repository post pipeline succeeding, same way gitlab-runner stores the contents of the project post pipeline succeedes. To view the contents of the project, go to the platform and navigate to the location '/homr/gitlab-runner/builds/<build_hash>/0/<gitlab_group>/<project>/'
