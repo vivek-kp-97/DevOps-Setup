@@ -2,6 +2,6 @@
   - Update the system using 'sudo ap install upgrade'.
   - Use 'mkdir jenkins' to make a directory for Jenkins.
   - Use 'docker run -d --name jenkins -p 8080:8080 -v $PWD/jenkins/ jenkins/jenkins' to pull and run jenkins latest image.
-  - Use 'docker logs jenkins -f' to see jenkins container logs in follow mode to get initial password present in the logs which can also be found by using 'cat /var/jenkins_home/secrets/initialAdminPassword'.
+  - Use 'docker logs jenkins -f' to see jenkins container logs in follow mode to get initial password present in the logs.
   - Use the initial password to login for the first time to jenkins GUI.
   - Setup jenkins user and proceed for futher actions.
