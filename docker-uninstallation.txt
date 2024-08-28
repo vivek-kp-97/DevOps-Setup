@@ -1,0 +1,17 @@
+1. Stop and remove all Docker containers:
+  sudo docker stop $(sudo docker ps -a -q)
+  sudo docker rm $(sudo docker ps -a -q)
+2. Remove Docker images, volumes, and networks:
+  sudo docker rmi $(sudo docker images -a -q)
+  sudo docker volume prune -f
+  sudo docker network prune -f
+3. Remove the Docker package:
+  sudo apt-get remove --purge docker.io
+4. Remove Docker configuration files:
+  sudo rm -rf /var/lib/docker
+  sudo rm -rf /etc/docker
+5. Remove Docker group:
+  sudo groupdel docker
+6. Clean up any remaining dependencies:
+  sudo apt-get autoremove -y
+  sudo apt-get autoclean
