@@ -1,4 +1,0 @@
-1. sudo apt purge docker.io / sudo apt-get purge docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin docker-ce-rootless-extras
-2. sudo rm -rf /var/lib/docker
-3. sudo rm -rf /var/lib/containerd
-4. sudo apt autoremove
